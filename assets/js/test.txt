@@ -1,0 +1,78 @@
+$( document ).ready(function() {
+// you will also have to setup the referring domains on your marvel developer portal
+var PRIV_KEY = "1aa326c39f8808fadbacdbe66e99f52d0c19157b";
+var publicKey = "0c44207736991ac42409420fa1c2f7bd";
+var data;
+var textComplete;
+
+  // you need a new ts every request                                                                                    
+  var ts = new Date().getTime();
+  var hash = CryptoJS.MD5(ts + PRIV_KEY + publicKey).toString();
+  var url = 'http://gateway.marvel.com:80/v1/public/characters?ts='+ts+'&apikey='+publicKey+'&hash='+hash;
+ console.log("passe");
+     function log( message ) {
+      $( "<div>" ).text( message ).prependTo( "#log" );
+      $( "#log" ).scrollTop( 0 );
+    }
+	 $("#name").autocomplete({
+	 source: function(request,response,url,publicKey){
+	 	$.ajax({
+		type:"GET",
+		url:url,
+		apikey: publicKey,
+		dataType: "json",
+		data:{
+            term: request.term
+          },
+		 success: function( data ) {
+			console.log(data);
+            response( data );
+          }
+		});
+	 },
+	 minLength: 3,
+	  select: function( event, ui ) {
+        log( "Selected: " + ui.item.value + " aka " + ui.item.id );
+      }
+	 });
+
+});
+
+
+
+//fonctionne 
+$( document ).ready(function() {
+// you will also have to setup the referring domains on your marvel developer portal
+var PRIV_KEY = "1aa326c39f8808fadbacdbe66e99f52d0c19157b";
+var publicKey = "0c44207736991ac42409420fa1c2f7bd";
+var data;
+var textComplete;
+
+  // you need a new ts every request                                                                                    
+  var ts = new Date().getTime();
+  var hash = CryptoJS.MD5(ts + PRIV_KEY + publicKey).toString();
+  
+  // the api deals a lot in ids rather than just the strings you want to use
+  var characterId = '1009718'; // wolverine                                                                             
+
+
+  var url = 'http://gateway.marvel.com:80/v1/public/characters?ts='+ts+'&apikey='+publicKey+'&hash='+hash;
+
+  console.log(url);
+  
+  $.ajax({
+	type:"GET",
+	url:url,
+	ts:ts,
+    apikey: publicKey,
+    dataType: "json",
+	data:data
+	})
+.then(function(data) {
+	console.log(data);
+}, 
+    function(error) {
+        alert('failed! ' + error.responseText);
+    });
+
+});
